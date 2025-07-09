@@ -198,3 +198,15 @@ cython_debug/
 .cursorignore
 .cursorindexingignore
 
+
+# Ignore virtual environments
+.venv/
+__pycache__/
+*.pyc
+
+# Ignore large data
+texts/
+pickles/
+*.pickle
+*.txt
+*.csv

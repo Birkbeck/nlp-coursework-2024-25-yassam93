@@ -115,9 +115,45 @@ def read_novels(path=Path.cwd() / "texts" / "novels"):
 
 
 def parse(df, store_path=Path.cwd() / "pickles", out_name="parsed.pickle"):
-    """Parses the text of a DataFrame using spaCy, stores the parsed docs as a column and writes 
-    the resulting  DataFrame to a pickle file"""
-    pass
+    """
+    Parses the text of a DataFrame using spaCy, stores the parsed docs as a new column,
+    and writes the resulting DataFrame to a pickle file.
+    
+    Args:
+        df (pd.DataFrame): DataFrame containing a 'text' column
+        store_path (Path): Folder to save the pickle file
+        out_name (str): Name of the pickle file
+    
+    Returns:
+        pd.DataFrame: DataFrame with a new 'parsed' column
+    """
+    
+
+    store_path.mkdir(parents=True, exist_ok=True)
+
+    parsed_docs = []
+    for text in df["text"]:
+        if len(text) > nlp.max_length:
+            chunks = [text[i:i+nlp.max_length] for i in range(0, len(text), nlp.max_length)]
+            doc = None
+            for chunk in chunks:
+                subdoc = nlp(chunk)
+                if doc is None:
+                    doc = subdoc
+                else:
+                    doc = spacy.tokens.Doc.from_docs([doc, subdoc])
+        else:
+            doc = nlp(text)
+        parsed_docs.append(doc)
+
+    df["parsed"] = parsed_docs
+
+    #saving parsed DataFrame to pickle
+    pickle_path = store_path / out_name
+    df.to_pickle(pickle_path)
+
+    print(f"\n Parsed texts saved to: {pickle_path}")
+    return df
 
 
 

@@ -256,28 +256,46 @@ def object_counts(doc):
 
 
 if __name__ == "__main__":
-    """
-    uncomment the following lines to run the functions once you have completed them
-    """
-    #path = Path.cwd() / "p1-texts" / "novels"
-    #print(path)
-    #df = read_novels(path) # this line will fail until you have completed the read_novels function above.
-    #print(df.head())
-    #nltk.download("cmudict")
-    #parse(df)
-    #print(df.head())
-    #print(get_ttrs(df))
-    #print(get_fks(df))
-    #df = pd.read_pickle(Path.cwd() / "pickles" /"name.pickle")
-    # print(adjective_counts(df))
-    """ 
-    for i, row in df.iterrows():
-        print(row["title"])
-        print(subjects_by_verb_count(row["parsed"], "hear"))
-        print("\n")
+    
+    
 
+    print("Reading novels...")
+    df = read_novels()
+    print(df[["title", "author", "year"]].head())
+
+    print("\nParsing novels with spaCy...")
+    
+    
+    df = parse(df)
+
+
+    print(df[["title", "parsed"]].head())
+
+    print("\nCalculating Type-Token Ratios:")
+    ttr_scores = get_ttrs(df)
+    for title, score in ttr_scores.items():
+        print(f"{title}: {score:.4f}")
+
+    print("\nCalculating Flesch-Kincaid Grade Levels:")
+    fk_scores = get_fks(df)
+    for title, score in fk_scores.items():
+        print(f"{title}: FK Grade {score}")
+
+
+
+    
+    print("\nTop 10 Syntactic Objects per Novel:")
     for i, row in df.iterrows():
-        print(row["title"])
-        print(subjects_by_verb_pmi(row["parsed"], "hear"))
-        print("\n")
-    """
+        print(f"{row['title']}: {object_counts(row['parsed'])}")
+
+
+    print("\nTop 10 Most Common Subjects of 'hear':")
+    for i, row in df.iterrows():
+        print(f"{row['title']}: {subjects_by_verb_count(row['parsed'], 'hear')}")
+
+    print("\nTop 10 Subjects of 'hear' by PMI:")
+    for i, row in df.iterrows():
+        print(f"{row['title']}: {subjects_by_verb_pmi(row['parsed'], 'hear')}")
+
+
+

@@ -199,6 +199,10 @@ cython_debug/
 .cursorindexingignore
 
 
+# macOS system files
+.DS_Store
+
+
 # Ignore virtual environments
 .venv/
 __pycache__/

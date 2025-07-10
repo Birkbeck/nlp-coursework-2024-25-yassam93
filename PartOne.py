@@ -93,9 +93,15 @@ def parse(df, store_path=Path.cwd() / "pickles", out_name="parsed.pickle"):
     pass
 
 
+
 def nltk_ttr(text):
-    """Calculates the type-token ratio of a text. Text is tokenized using nltk.word_tokenize."""
-    pass
+    """
+    Calculates the Type-Token Ratio (TTR) of a given text using NLTK.
+    Ignores punctuation and is case-insensitive.
+    """
+    tokens = word_tokenize(text.lower())
+    words = [t for t in tokens if t not in string.punctuation]
+    return len(set(words)) / len(words) if words else 0.0
 
 
 def get_ttrs(df):

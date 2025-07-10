@@ -4,3 +4,9 @@ Second, it ignores the syntactic coherence, complexity, and prior knowledge need
 
 
 
+(f) Tokeniser Description and Assessment
+I created a customised tokeniser that uses a number of crucial pre-processing stages in order to enhance the classifier's performance in Part (e). Using the NLTK library, this tokeniser first lowercases the speech text and excludes stopwords and punctuation. WordNet lemmatisation is then used, which breaks words down to their basic forms; for instance, "arguing" becomes "argue." This improves the model's ability to generalise by lowering redundancy in the feature space. 
+The tokeniser was made to capture significant linguistic structure while remaining reasonably light. Despite investigating the potential of more intricate approaches like POS-tag-based lemmatisation, I ultimately discovered that the more straightforward method performed better on this task, most likely as a result of the parliamentary speeches' generally formal and consistent language.
+This function was provided to a TfidfVectorizer that was set up to apply sublinear term frequency scaling, document frequency limits, and to include unigrams, bigrams, and trigrams. While reducing the impact of extremely common phrases, these factors helped guarantee that only informative features were kept.
+I trained a number of models with this configuration and assessed them using the test set. A Linear SVM with C = 1 performed the best, achieving a macro-average F1 score of 0.7020, which was higher than previous stages. This score shows that the combination of thorough feature engineering and regularisation tuning was successful, and it reflects a balance between precision and recall across all classes. Comparative testing revealed that the Complement Naive Bayes model had a lower F1 score of 0.5614.
+

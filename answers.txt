@@ -1,1 +1,6 @@
-Answers to the text questions go here.
+Part 1 d: When is the Flesch–Kincaid score not a valid, robust, or reliable estimator of text difficulty? Give two conditions.
+Firstly, it makes the assumption that lengthier words and phrases are harder by nature, which isn't necessarily the case. For instance, technical or scientific writing may use short, well-known terms to express difficult concepts that need a lot of cognitive processing. As a result, the score might not accurately reflect how challenging these texts are.
+Second, it ignores the syntactic coherence, complexity, and prior knowledge needed to comprehend a section. Because of its short words and sentences, a literary novel with poetic phrasing or figurative language may be rated as "easy," yet it may still be difficult for readers who lack the requisite cultural background or interpretive abilities. The metric does not account for more profound cognitive and environmental elements of reading in either scenario.
+
+
+

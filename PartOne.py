@@ -25,6 +25,7 @@ nlp.max_length = 2000000
 
 
 
+
 def fk_level(text, d):
     """Returns the Flesch-Kincaid Grade Level of a text (higher grade is more difficult).
     Requires a dictionary of syllables per word.
@@ -36,7 +37,27 @@ def fk_level(text, d):
     Returns:
         float: The Flesch-Kincaid Grade Level of the text. (higher grade is more difficult)
     """
-    pass
+    sentences = nltk.sent_tokenize(text)
+    words = nltk.word_tokenize(text)
+    # Filtering for purely alphabetic words to refine analysis.
+    words = [w for w in words if w.isalpha()]
+    
+
+    syllables = sum(count_syl(w, d) for w in words)
+
+    num_sentences = len(sentences)
+
+
+    num_words = len(words)
+
+    if num_sentences == 0 or num_words == 0:
+        return 0.0
+
+    asl = num_words / num_sentences
+
+    asw = syllables / num_words
+
+    return round(0.39 * asl + 11.8 * asw - 15.59, 4)
 
 
 def count_syl(word, d):
@@ -50,7 +71,13 @@ def count_syl(word, d):
     Returns:
         int: The number of syllables in the word.
     """
-    pass
+    word = word.lower()
+    if word in d:
+        return len([phoneme for phoneme in d[word][0] if phoneme[-1].isdigit()])
+    else:
+        
+        return len(re.findall(r'[aeiouy]+', word))
+
 
 
 

@@ -185,20 +185,73 @@ def get_fks(df):
 
 
 def subjects_by_verb_pmi(doc, target_verb):
-    """Extracts the most common subjects of a given verb in a parsed document. Returns a list."""
-    pass
+    """Extracts the most common subjects of a given verb in a parsed document,
+    ranked by Pointwise Mutual Information (PMI). Returns a list of tuples.
+    
+    Args:
+        doc (spacy.tokens.Doc): Parsed document.
+        target_verb (str): The verb to analyse (lemma form, e.g. 'hear').
+
+    Returns:
+        List[Tuple[str, float]]: Top 10 subjects ranked by PMI.
+    """
+    total_tokens = len(doc)
+    if total_tokens == 0:
+        return []
+
+    verb_freq = 0
+    subj_freq = Counter()
+    joint_freq = Counter()
+
+    for token in doc:
+        if token.dep_ == "nsubj":
+            subj_freq[token.text.lower()] += 1
+        if token.lemma_ == target_verb and token.pos_ == "VERB":
+            verb_freq += 1
+            for child in token.children:
+                if child.dep_ == "nsubj":
+                    joint_freq[child.text.lower()] += 1
+
+    if verb_freq == 0:
+        return []
+
+
+    pmi = {}
+
+    for subj in joint_freq:
+        p_xy = joint_freq[subj] / total_tokens
+        p_x = subj_freq[subj] / total_tokens
+        p_y = verb_freq / total_tokens
+        if p_x > 0 and p_y > 0:
+            pmi[subj] = math.log2(p_xy / (p_x * p_y))
+
+    return sorted(pmi.items(), key=lambda x: x[1], reverse=True)[:10]
 
 
 
 def subjects_by_verb_count(doc, verb):
     """Extracts the most common subjects of a given verb in a parsed document. Returns a list."""
-    pass
+    subjects = []
+    for token in doc:
+        if token.lemma_ == verb and token.pos_ == "VERB":
+            for child in token.children:
+                if child.dep_ == "nsubj":
+                    subjects.append(child.text.lower())
+    return Counter(subjects).most_common(10)
 
 
 
-def adjective_counts(doc):
-    """Extracts the most common adjectives in a parsed document. Returns a list of tuples."""
-    pass
+
+
+def object_counts(doc):
+    """Returns the 10 most common syntactic objects (dobj, pobj) in the parsed document."""
+    objects = [
+        token.text.lower()
+        for token in doc
+        if token.dep_ in ("dobj", "pobj") and token.is_alpha
+    ]
+    return Counter(objects).most_common(10)
+
 
 
 
